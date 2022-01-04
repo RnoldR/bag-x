@@ -1,0 +1,23 @@
+FROM debian:bullseye-20211201
+
+# v1.0-rc10/flyspray-1.0-rc10.tgz
+ENV BAG_URL="https://service.pdok.nl/kadaster/adressen/atom/v1_0/downloads/lvbag-extract-nl.zip"
+ENV BAG_DIR="/bag"
+
+# The flyspray app must be run from /var/www/html
+
+# do an apt update and install non-interactive aids to prevent some warnings
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt update 
+RUN apt install -y apt-utils wget unzip
+RUN apt install -y python-setuptools python-dev libpq-dev
+
+# install miniconda
+RUN wget -nv -O /tmp/miniconda.sh \
+         https://repo.anaconda.com/miniconda/Miniconda3-py39_4.10.3-Linux-x86_64.sh
+RUN /bin/bash /tmp/miniconda.sh -b -p /miniconda
+
+RUN conda install configparse gdal libgdal libxml2 libxslt lxml psycopg2
+
+#CMD ["source", "xtract.sh"]
+CMD ["/bin/bash", "-c", "ls -l"]
